@@ -1,7 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Login from '../screens/Login';
-import Home from '../screens/Home';
 import Sidebar from '../components/utils/Sidebar';
+import ComparisonGraph from '../screens/Dashboard/ComparisonGraph';
+import TimeSeriesGraph from '../screens/Dashboard/TimeSeriesGraph';
+import Page404 from '../screens/Page404';
 
 const router = createBrowserRouter([
 	{
@@ -13,15 +15,19 @@ const router = createBrowserRouter([
 		element: <Sidebar />,
 		children: [
 			{
-				path: '/dashboard',
-				element: <Home />
+				path: '/dashboard/comparison',
+				element: <ComparisonGraph />
+			},
+			{
+				path: '/dashboard/time-series',
+				element: <TimeSeriesGraph />
 			}
 		]
 	},
-	// {
-	// 	path: '*',
-	// 	element: <Page404 />
-	// }
+	{
+		path: '*',
+		element: <Page404 />
+	}
 ]);
 
 export default router;
