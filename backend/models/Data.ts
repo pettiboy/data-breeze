@@ -1,13 +1,10 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
-const dataSchema = new Schema({
-  device: {
-    type: Schema.Types.ObjectId,
-    ref: "Device",
-  },
+const dataSchema = new mongoose.Schema({
+  device: String, // Make sure it's defined as a string
   t: Date,
   w: Number,
-  h: Number,
+  h: String,
   p1: Number,
   p25: Number,
   p10: Number,
