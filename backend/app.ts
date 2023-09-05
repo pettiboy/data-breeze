@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import morgan from "morgan";
 import bodyParser from "body-parser";
+import cors from "cors";
 
 import dataRouter from "./routes/data.routes";
 import csvRouter from "./routes/csv.routes";
@@ -15,6 +16,7 @@ dotenv.config();
 const app = express();
 
 // Middleware
+app.use(cors());
 app.use(
   bodyParser.urlencoded({
     extended: true,

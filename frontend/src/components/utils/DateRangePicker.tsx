@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Box, Typography, Button } from '@mui/material';
+import { DateRangeContext } from '../../context/DateRangeContext';
 
 type Props = {};
 
 const DateRangePicker: React.FC<Props> = () => {
-    const [startDate, setStartDate] = useState<Dayjs>(dayjs('2022-04-17T15:30'));
-    const [endDate, setEndDate] = useState<Dayjs>(dayjs('2022-04-17T16:30'));
+    const { startDate, endDate, setStartDate, setEndDate } = useContext(DateRangeContext)
+
+    // const [startDate, setStartDate] = useState<Dayjs>(dayjs('2022-04-17T15:30'));
+    // const [endDate, setEndDate] = useState<Dayjs>(dayjs('2022-04-17T16:30'));
     const [error, setError] = useState<string>('');
     const [isEndDatePickerOpen, setEndDatePickerOpen] = useState<boolean>(false);
-
 
     // Function to enable only valid dates
     const isDateEnabled = (date: Dayjs) => {
