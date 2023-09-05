@@ -1,4 +1,4 @@
-import { Box, Grid, Paper, Typography } from '@mui/material'
+import { Box, Grid, Paper, Typography, useTheme } from '@mui/material'
 import { ApexOptions } from 'apexcharts';
 import ReactApexChart from 'react-apexcharts';
 
@@ -88,11 +88,12 @@ const chartOptions: ApexOptions = {
 
 
 const ComparisonGraph = (props: Props) => {
+    const theme = useTheme()
 
     const subHeadingStyle = {
         fontSize: "24px",
         fontWeight: "bold",
-        color: "#666666",
+        color: theme.palette.text.secondary,
     }
 
     return (

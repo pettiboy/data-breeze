@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import DataRepository from "../repository/data.repository";
+import { isValidISODate } from "../utils/isValidISODate";
 
 export const getDeviceData = async (req: Request, res: Response) => {
   const deviceId = req.params.deviceId;
@@ -68,13 +69,3 @@ export const getDataByTimeRange = async (req: Request, res: Response) => {
       .json({ error: "Failed to filter data by time range" });
   }
 };
-
-function isValidISODate(dateString: string | undefined): boolean {
-  if (!dateString) {
-    return false;
-  }
-
-  // regex for ISO date format (YYYY-MM-DDTHH:MM:SS.SSSZ)
-  const isoDatePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
-  return isoDatePattern.test(dateString);
-}
