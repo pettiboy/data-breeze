@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
-import csv from "fast-csv";
 import csvParser from "csv-parser";
 import fs from "fs";
-import DataModel from "../models/Data";
+import dataRepository from "../repository/csv.repository";
 
 export const uploadCSV = async (req: Request, res: Response) => {
   // check if a csv file has been uploaded
@@ -21,25 +20,28 @@ export const uploadCSV = async (req: Request, res: Response) => {
   // readable stream
   const stream = fs.createReadStream(csvFile.path);
 
+  let existingRecordInDB = false;
+  let invalidRowsInCsv = false;
+
   // parse csv
   stream
     .pipe(csvParser())
     .on("data", (row) => {
       if (!isValidRow(row)) {
-        console.warn("Invalid row");
+        invalidRowsInCsv = true;
         return;
       } else {
         // check if a record with the same device and timestamp already exists
-        const existingRecord = DataModel.findOne({
-          device: row.device,
-          t: convertDateStringToDate(row.t),
-        });
+        const existingRecord = dataRepository.exists(
+          row.device,
+          convertDateStringToDate(row.t)
+        );
 
         // add the promise for this operation to the array
         asyncOperations.push(
           existingRecord.then((result) => {
             if (result) {
-              console.log("Record already exists:", row.device, row.t);
+              existingRecordInDB = true;
             } else {
               // new doc only if it doesnt exist
               csvData.push({
@@ -64,14 +66,14 @@ export const uploadCSV = async (req: Request, res: Response) => {
         console.log("csvData", csvData.length);
 
         // insert validated data to db
-        await DataModel.insertMany(csvData);
+        await dataRepository.insert(csvData);
 
         fs.unlinkSync(csvFile.path);
 
         return res.status(201).json({
           message: "CSV data saved to MongoDB",
-          didContainDuplicates: asyncOperations.length > 0,
-          didContainInvalidRows: csvData.length !== asyncOperations.length,
+          didContainExistingRecords: existingRecordInDB,
+          didContainInvalidRows: invalidRowsInCsv,
         });
       } catch (error) {
         console.error("Error saving data to MongoDB:", error);
@@ -81,6 +83,10 @@ export const uploadCSV = async (req: Request, res: Response) => {
       }
     });
 };
+
+// ----------------
+// HELPER FUNCTIONS
+// ----------------
 
 function isValidRow(row: any): boolean {
   // all fields should be present
