@@ -1,6 +1,6 @@
 import DataModel from "../models/Data";
 
-class DataRepository {
+class CsvDataRepository {
   async exists(deviceId: string, timestamp: Date): Promise<boolean> {
     const existingRecord = await DataModel.findOne({
       device: deviceId,
@@ -14,4 +14,4 @@ class DataRepository {
   }
 }
 
-export default new DataRepository();
+export default new CsvDataRepository();

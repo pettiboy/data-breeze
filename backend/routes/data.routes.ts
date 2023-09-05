@@ -1,17 +1,16 @@
 import { Router } from "express";
 import {
-  getData,
-  createData,
-  updateData,
-  deleteData,
+  getDeviceData,
+  getPMValues,
+  getDataByTimeRange,
 } from "../controllers/data.controller";
-import { authenticateToken } from "../middleware/auth.middleware";
 
 const router = Router();
 
-router.get("/data/:deviceId", authenticateToken, getData);
-router.post("/data", authenticateToken, createData);
-router.put("/data/:id", authenticateToken, updateData);
-router.delete("/data/:id", authenticateToken, deleteData);
+router.get("/devices/:deviceId", getDeviceData);
+
+router.get("/pm-values/:deviceId", getPMValues);
+
+router.get("/time-range/", getDataByTimeRange);
 
 export default router;
